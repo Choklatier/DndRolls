@@ -7,25 +7,29 @@ def gauss(x,m,sig):
     return 1/(sig * np.sqrt(2*np.pi)) * np.exp(-0.5 * ((x - m)/sig)**2 )
 
 class Rolls:
-    def __init__(self,filepath,playername,dtype = 20):
+    def __init__(self,filepath : str,playername : str,dtype = 20) -> None:
         self.rolls_dict = read_rolls(filepath)
         self.d = dtype # number of possible outcome for dice
         self.player = playername
+
+        self.rolls_dict["TotalRolls"] = []
+        for session in self.rolls_dict:
+            self.rolls_dict["TotalRolls"] += self.rolls_dict[session]
     
-    def computeSumm(self,session):
+    def computeSumm(self,session : str) -> tuple[int,int]: 
         rolls = self.rolls_dict[session]
         nrolls = len(rolls)
         summ = np.sum(rolls)
         sim_summ = [np.sum(np.random.randint(1,self.d + 1,size = nrolls)) for i in range(500000)]
         return summ,sim_summ
     
-    def computeCumSum(self,session):
+    def computeCumSum(self,session : str) -> tuple[int,int]:
         rolls = self.rolls_dict[session]
         cumul = np.cumsum(rolls)
         sim_cumul = ((self.d + 1)/2) * (np.arange(len(cumul)) + 1 )
         return cumul,sim_cumul
 
-    def plotRolls(self,session,axis = plt):
+    def plotRolls(self,session : str,axis = plt) -> None:
         rolls = self.rolls_dict[session]
         axis.hist(rolls,density = False,bins = 20)
         if axis != plt:
@@ -33,7 +37,7 @@ class Rolls:
             axis.set_xlabel("Roll")
             axis.set_ylabel("Number of rolls")
 
-    def plotSumm(self,session,axis = plt):
+    def plotSumm(self,session : str,axis = plt) -> None:
         rolls = self.rolls_dict[session]
         summ,sim_summ = self.computeSumm(session)
         counts,bins,_ = axis.hist(sim_summ,density = True,bins = 60,label = "Simulated")
@@ -68,7 +72,7 @@ class Rolls:
             axis.set_xlabel(f"Sum of ({len(rolls)}) rolls")
             axis.set_ylabel("Probability")
         
-    def plotCumul(self,session,axis = plt):
+    def plotCumul(self,session : str,axis = plt) -> None:
         cumul,sim_cumul = self.computeCumSum(session)
         axis.plot(cumul)
         axis.plot(sim_cumul,ls = "--")
@@ -79,7 +83,7 @@ class Rolls:
             axis.set_xlabel("Roll number")
             axis.set_ylabel("Sum of rolls")
 
-    def plotAnalytical(self,session,axis = plt,points = 10000):
+    def plotAnalytical(self,session : str,axis = plt,points : int = 10000) -> None:
         rolls = self.rolls_dict[session]
         N = len(rolls)
         mean = N * (self.d + 1)/2
@@ -98,16 +102,4 @@ class Rolls:
         print("Analytical probability of rolling this or worse:",
         np.round(np.sum(f_below) * dx,decimals = 3))
         
-
-
-            
-
-
-
-
-
-
-
-
-
-
+        

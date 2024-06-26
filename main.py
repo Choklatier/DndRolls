@@ -1,8 +1,9 @@
 from rolls import Rolls
 import matplotlib.pyplot as plt
 
-sessions = ["Argynvostholt"]
-players  = ["Lucas"]
+# TotalRolls is special, it is the cumulation of all rolls for any Rolls object.
+sessions = ["Scarecrows","TheAmberTemple","TotalRolls"]
+players  = ["Lucas","Players"] 
 
 for playername in players:
     playerRolls = Rolls(f"data/{playername}.txt",playername)

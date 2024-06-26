@@ -1,4 +1,4 @@
-def read_rolls(file_path):
+def read_rolls(file_path : str) -> dict:
     output = {}
     with open(file_path) as f: content = f.read()
     content = content.strip()
